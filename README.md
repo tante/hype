@@ -34,8 +34,34 @@ Create a `config.yaml` and a `auth.yaml` file in `./config/`. Enter the credenti
 bot_account:
   server: "mastodon.example.com"
   email: "hypebot@example.com"
-  password: "averylongandsecurepassword"
+  client_id: "RANDOMSTRINGOFSTUFF"
+  client_secret: "ANOTHERRANDOMSTRINGOFSTUFF"
+  access_token: "EVENMORERANDOMSTUFF"
 ```
+
+In order to auth against your Mastodon server using OAuth (which is the state-of-the-art way) you will need to set up an "application". Log into your bot account on your instance. Now head over to `Preferences`. In your `Preferences` menu select the `< > Development` menu item.
+
+Now click `New application` as seen below (you can also see an example of a configured app there:
+
+![](./res/create_app.png)
+
+Fill in a name (something that will make you understand what the app is for. Maybe `Hypebot`?) and select the following scopes:
+
+* read:search (we need that to look up the post to boost through your server)
+* write:accounts (needed to set your bot's profile with the configured text)
+* write:statuses (needed to be able to boost)
+
+You could choose more rights for the app but the bot does not need them.
+
+After creation the application is ready and at the top it will give you three strings you need to add to `auth.yml`:
+
+![](./res/access_data.png)
+
+* client_id
+* client_secret
+* access_token
+
+Be aware that those three things together give anyone who has them the rights to do anything that the scopes you selected for the app allow.
 
 `config.yaml`
 
@@ -64,6 +90,6 @@ subscribed_instances:
 ## Features
 
 - Boost trending posts from other Mastodon instances
-- Update bot profile with list of subscribed instances
-
+- configurable delay to spread out boosts a bit
+- filter instances whose posts might have make it to a server you are watching but you don't want to give any support to
 ---
