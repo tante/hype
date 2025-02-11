@@ -2,4 +2,6 @@
 bot_account:
   server: ""
   email: ""
-  password: ""
+  client_id: ""
+  client_secret: ""
+  access_token: ""

@@ -2,7 +2,7 @@ import time
 import schedule
 import logging
 from mastodon import Mastodon
-from config import Config
+from .config import Config
 import os.path
 
 
@@ -18,13 +18,13 @@ class Hype:
         self.log.info("Config loaded")
 
     def login(self):
-        self.client = self.init_client(self.config.bot_account.server)
-        self.log.info(f"Logging in to {self.config.bot_account.server}")
-        self.client.log_in(
-            self.config.bot_account.email,
-            self.config.bot_account.password,
-            to_file=f"secrets/{self.config.bot_account.server}_usercred.secret",
+        self.client = Mastodon(access_token=self.config.bot_account.access_token,
+            api_base_url=self.config.bot_account.server,
+            client_id=self.config.bot_account.client_id,
+            client_secret=self.config.bot_account.client_secret,
+            version_check_mode="none"
         )
+        self.log.info(f"Logged in to {self.config.bot_account.server} (using OAUTH)")
 
     def update_profile(self):
         self.log.info("Update bot profile")

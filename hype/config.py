@@ -6,15 +6,19 @@ import logging
 class BotAccount:
     server: str
     email: str
-    password: str
+    client_id: str
+    client_secret: str
+    access_token: str
 
-    def __init__(self, server: str, email: str, password: str) -> None:
+    def __init__(self, server: str, email: str, client_id: str, client_secret: str, access_token: str) -> None:
         self.server = server
         self.email = email
-        self.password = password
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.access_token = access_token
 
     def __repr__(self) -> str:
-        return f"server: {self.server}, email: {self.email}, password: {self.password}"
+        return f"server: {self.server}, email: {self.email}"
 
 
 class Instance:
@@ -58,11 +62,15 @@ class Config:
                 self.bot_account = BotAccount(
                     server=config["bot_account"]["server"],
                     email=config["bot_account"]["email"],
-                    password=config["bot_account"]["password"],
+                    client_id=config["bot_account"]["client_id"],
+                    client_secret=config["bot_account"]["client_secret"],
+                    access_token=config["bot_account"]["access_token"],
                 )
             else:
                 logging.getLogger("Config").error(config)
-                raise ConfigException("Bot account config is incomplete or missing.")
+                raise ConfigException("""Bot account config is incomplete or missing. Needs server, email, client_id, client_secret and access token.
+
+                    To find out how to set up an application and access token see $YOURSERVER/settings/applications""")
 
         with open(conf, "r") as configfile:
             config = yaml.load(configfile, Loader=yaml.Loader)
