@@ -1,6 +1,7 @@
 from typing import List
 import yaml
 import logging
+from os.path import isfile
 
 
 class BotAccount:
@@ -41,12 +42,20 @@ class Config:
     filtered_instances: List = []
     profile: str = ""
     fields: dict = {}
+    delay: int = 0 # seconds
+
 
     def __init__(self):
+        # the /app paths are great for docker but annoying to test locally
+        # so we try to see if we are in that environment or use local paths otherwise
         # auth file containing login info
         auth = "/app/config/auth.yaml"
+        if not isfile(auth):
+            auth = "./config/auth.yaml"
         # settings file containing subscriptions
         conf = "/app/config/config.yaml"
+        if not isfile(conf):
+            conf = "./config/config.yaml"
 
         # only load auth info
         with open(auth, "r") as configfile:
@@ -57,7 +66,9 @@ class Config:
                 and config.get("bot_account")
                 and config["bot_account"].get("server")
                 and config["bot_account"].get("email")
-                and config["bot_account"].get("password")
+                and config["bot_account"].get("client_id")
+                and config["bot_account"].get("client_secret")
+                and config["bot_account"].get("access_token")
             ):
                 self.bot_account = BotAccount(
                     server=config["bot_account"]["server"],
@@ -79,6 +90,10 @@ class Config:
                 self.interval = (
                     config["interval"] if config.get("interval") else self.interval
                 )
+                self.delay = (
+                    config["delay"] if config.get("delay") else self.delay
+                )
+
                 self.log_level = (
                     config["log_level"] if config.get("log_level") else self.log_level
                 )
@@ -103,7 +118,7 @@ class Config:
                 )
 
                 self.filtered_instances = (
-                    [name for name in config["filtered_instances"].items()]
+                    [name for name in config["filtered_instances"]]
                     if config.get("filtered_instances")
                     else []
                 )

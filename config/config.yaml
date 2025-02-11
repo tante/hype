@@ -1,6 +1,12 @@
 # Refresh interval in minutes
 interval: 60
 
+# Delay after a boost (to spread out posts a bit)
+delay: 180
+
+# log level
+log_level: "INFO"
+
 # Profile for the bot.
 # Ideally include a link to the list of servers or something
 profile: "This bot mirrors trending posts from other servers into this server's local timeline. You can find the list of Servers HERE"

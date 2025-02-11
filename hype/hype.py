@@ -2,7 +2,7 @@ import time
 import schedule
 import logging
 from mastodon import Mastodon
-from .config import Config
+from config import Config
 import os.path
 
 
@@ -66,6 +66,10 @@ class Hype:
                         already_boosted = status["reblogged"]
                         if not already_boosted and not filtered and images_described:
                             self.client.status_reblog(status)
+                            # if delay is set, wait for that amount of minutes
+                            if self.config.delay:
+                                self.log.info(f"Sleeping for {self.config.delay} seconds after boosting {status.url}")
+                                time.sleep(self.config.delay)
                         self.log.info(
                             f"{instance.name}: {counter}/{len(trending_statuses)} {'ignore' if (already_boosted or filtered)  else 'boost'}"
                         )
@@ -94,10 +98,12 @@ class Hype:
                 instance_name,
                 api_base_url=f"https://{instance_name}",
                 to_file=secret_path,
+                scopes=['read']
             )
         else:
             self.log.info(f"Client for {instance_name} is already initialized.")
+
         return Mastodon(
-            client_id=secret_path,
-            ratelimit_method="pace",
-        )
+                client_id=secret_path,
+                ratelimit_method="pace",
+            )
