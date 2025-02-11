@@ -1,0 +1,11 @@
+[project]
+name = "hype"
+version = "0.1.0"
+description = "Hypebot boosts popular posts to your local Mastodon instance's timeline"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mastodon-py>=1.8.1",
+    "pyyaml>=6.0.2",
+    "schedule>=1.2.2",
+]
