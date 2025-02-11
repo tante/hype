@@ -4,3 +4,4 @@ __pycache__
 *.secret
 /secrets
 config-prod.yaml
+./hype/config
